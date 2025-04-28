@@ -3,11 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:website_blocker/providers/blocker_provider.dart';
 import 'package:website_blocker/screens/blocked_websites_screen.dart';
-import 'package:website_blocker/screens/blocked_keywords_screen.dart';
 import 'package:website_blocker/screens/settings_screen.dart';
 import 'package:website_blocker/screens/web_browser_screen.dart';
-import 'package:website_blocker/services/vpn_service.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -21,25 +18,14 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _pages = [
     const DashboardPage(),
     const BlockedWebsitesScreen(),
-    const BlockedKeywordsScreen(),
     const SettingsScreen(),
   ];
-
-  @override
-  void initState() {
-    super.initState();
-    _requestPermissions();
-  }
-
-  Future<void> _requestPermissions() async {
-    await Permission.notification.request();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Content Blocker'),
+        title: const Text('Website Blocker'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -69,10 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.block),
             label: 'Websites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.text_fields),
-            label: 'Keywords',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
@@ -109,42 +91,6 @@ class DashboardPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Blocking Service',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Enable Content Blocking'),
-                      Switch(
-                        value: blockerProvider.isVpnActive,
-                        onChanged: (value) async {
-                          if (value) {
-                            var status = await Permission.notification.request();
-                            if (status.isGranted) {
-                              VpnService.startVpn(context);
-                            }
-                          } else {
-                            VpnService.stopVpn(context);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
                     'Blocking Stats',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
@@ -156,43 +102,10 @@ class DashboardPage extends StatelessWidget {
                       Text('${blockerProvider.blockedWebsites.length} websites blocked'),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      const Icon(Icons.text_fields),
-                      const SizedBox(width: 8),
-                      Text('${blockerProvider.blockedKeywords.length} keywords blocked'),
-                    ],
-                  ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          if (blockerProvider.isVpnActive)
-            const Card(
-              elevation: 4,
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Status',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Icon(Icons.shield, color: Colors.green),
-                        SizedBox(width: 8),
-                        Text('Protection Active', style: TextStyle(color: Colors.green)),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
           const SizedBox(height: 16),
           Card(
             elevation: 4,

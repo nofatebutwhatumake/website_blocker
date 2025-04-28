@@ -3,14 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:website_blocker/screens/home_screen.dart';
 import 'package:website_blocker/providers/blocker_provider.dart';
-import 'package:website_blocker/services/notification_service.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize notification service
-  await NotificationService().initialize();
-  
+void main() {
   runApp(
     MultiProvider(
       providers: [
@@ -27,18 +21,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Website & Content Blocker',
+      title: 'Website Blocker',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        brightness: Brightness.light,
         useMaterial3: true,
       ),
-      darkTheme: ThemeData(
-        primarySwatch: Colors.blue,
-        brightness: Brightness.dark,
-        useMaterial3: true,
-      ),
-      themeMode: ThemeMode.system,
       home: const HomeScreen(),
     );
   }
