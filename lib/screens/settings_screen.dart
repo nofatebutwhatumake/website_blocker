@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:website_blocker/providers/blocker_provider.dart';
+import 'package:website_blocker/services/vpn_service.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -26,9 +27,13 @@ class SettingsScreen extends StatelessWidget {
               SwitchListTile(
                 title: const Text('Enable Website Blocking'),
                 subtitle: const Text('Toggle website blocking on/off'),
-                value: blockerProvider.isBlockingEnabled,
-                onChanged: (value) {
-                  blockerProvider.setBlockingEnabled(value);
+                value: blockerProvider.isVpnActive,
+                onChanged: (value) async {
+                  if (value) {
+                    await VpnService.startVpn(context);
+                  } else {
+                    await VpnService.stopVpn(context);
+                  }
                 },
               ),
               const Divider(),
