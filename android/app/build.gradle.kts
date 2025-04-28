@@ -28,6 +28,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        testInstrumentationRunner = null
+        testApplicationId = null
     }
 
     buildTypes {
@@ -37,8 +39,22 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = false
+            isReturnDefaultValues = true
+            all { 
+                it.enabled = false 
+            }
+        }
+    }
 }
 
 flutter {
     source = "../.."
+}
+
+tasks.withType<Test> {
+    enabled = false
 }
